@@ -17,6 +17,7 @@ function createMap(data) {
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
   let heatArray = [];
+  let circleArray =[];
 
   for (let i = 0; i < data.length; i++){
     let row = data[i];
@@ -35,6 +36,18 @@ function createMap(data) {
 
       // add to heatmap
       heatArray.push(point);
+
+      // create circ
+      // define marker (in this case a circle)
+      let circleMarker = L.circle(point, {
+        fillOpacity: 0.75,
+        color: "purple",
+        fillColor: "purple",
+        radius: locations.properties.mag ** 7
+      }).bindPopup(popup);
+
+      circleArray.push(circleMarker)
+
     }
   }
 
