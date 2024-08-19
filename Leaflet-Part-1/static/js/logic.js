@@ -1,3 +1,36 @@
+//helper function 
+function markerSize(mag) {
+    let radius = 1;
+
+    if (mag > 0) {
+        radius = mag ** 7;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // STEP 1: Init the Base Layers
 
 // Define variables for our tile layers.
