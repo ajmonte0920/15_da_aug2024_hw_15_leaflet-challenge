@@ -1,48 +1,4 @@
 
-
-
-
-
-//helper function 
-function markerSize(mag) {
-    let radius = 1;
-
-    if (mag > 0) {
-        radius = mag ** 7;
-    }
-
-    return radius 
-}
-
-// custom named function
-function chooseColor(depth) {
-    let color = "black";
-
-  // Switch on borough name
-  if (depth <= 10) {
-    color = "#98EE00";
-  } else if (depth <= 30) {
-    color = "#D4EE00";
-  } else if (depth <= 50) {
-    color = "#EECC00";
-  } else if (depth <= 70) {
-    color = "#EE9C00";
-  } else if (depth <= 90) {
-    color = "#EA822C";
-  } else {
-    color = "#EA2C2C";
-  }
-
-    //return color 
-    return (color);
-
-}
-
-
-
-
-
-
 function createMap(data) {
   // STEP 1: Init the Base Layers
 
@@ -58,10 +14,11 @@ function createMap(data) {
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
   let heatArray = [];
+  let circleArray = [];
 
   for (let i = 0; i < data.length; i++){
     let row = data[i];
-    let location = row.location;
+    let location = row.geometry;
 
     // create marker
     if (location) {
@@ -70,12 +27,23 @@ function createMap(data) {
 
       // make marker
       let marker = L.marker(point);
-      let popup = `<h1>${row.incident_address}</h1><hr><h2>${row.borough}</h2><hr><h3>${row.descriptor} | ${row.created_date}</h3>`;
+      let popup = `<h1>${row.properties.title}</h1>`;
       marker.bindPopup(popup);
       markers.addLayer(marker);
 
       // add to heatmap
       heatArray.push(point);
+
+      // create circle
+      // define marker (in ths case a circle)
+      let cirlceMarker = L.cirlce(point, {
+        fillOpacity: 0.75, 
+        color: chooseColor(location.coordinates[2]),
+        fillColor: chooseColor(location.coordinates[2]),
+        radius: markerSize(row.properties.mag)
+      }).bindPopup(popup);
+        
+      cirlceArray.push(circleMarker); 
     }
   }
 
@@ -83,6 +51,16 @@ function createMap(data) {
   let heatLayer = L.heatLayer(heatArray, {
     radius: 25,
     blur: 20
+  });
+
+  let circleLayer = L.layerGroup(circleArray);
+
+  // tectonic plate layer
+  let geo_layer = L.geoJSON(geo_data, {
+    style: {
+      "color": "fuschia",
+      "weight": 5
+    }
   });
 
   // Step 3: BUILD the Layer Controls
@@ -112,26 +90,16 @@ function createMap(data) {
 }
 
 function doWork() {
-  let user_inp = "Noise";
-
-  // Store the API query variables.
-  // For docs, refer to https://dev.socrata.com/docs/queries/where.html.
-  // And, refer to https://dev.socrata.com/foundry/data.cityofnewyork.us/erm2-nwe9.
-  let baseURL = "https://data.cityofnewyork.us/resource/fhrw-4uyv.json?";
-  // Add the dates in the ISO formats
-  let date = "$where=created_date between'2023-01-01T00:00:00' and '2024-01-01T00:00:00'";
-  // Add the complaint type.
-  let complaint = `&complaint_type=${user_inp}`;
-  // Add a limit.
-  let limit = "&$limit=10000";
+ 
 
   // Assemble the API query URL.
-  let url = baseURL + date + complaint + limit;
+  let url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
 
   d3.json(url).then(function (data) {
     // console.log(data);
 
-    createMap(data);
+    let data_rows = data.features;
+    createMap(data_rows);
   });
 }
 
