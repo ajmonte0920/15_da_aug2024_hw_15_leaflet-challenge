@@ -1,3 +1,6 @@
+// GOAL 1
+// Can I render a basic base map? - Set up Leaflet correctly
+// Can we fetch the data that we need to plot?
 
 function createMap(data) {
   // STEP 1: Init the Base Layers
@@ -14,7 +17,6 @@ function createMap(data) {
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
   let heatArray = [];
-  let circleArray = [];
 
   for (let i = 0; i < data.length; i++){
     let row = data[i];
@@ -33,17 +35,6 @@ function createMap(data) {
 
       // add to heatmap
       heatArray.push(point);
-
-      // create circle
-      // define marker (in ths case a circle)
-      let cirlceMarker = L.cirlce(point, {
-        fillOpacity: 0.75, 
-        color: chooseColor(location.coordinates[2]),
-        fillColor: chooseColor(location.coordinates[2]),
-        radius: markerSize(row.properties.mag)
-      }).bindPopup(popup);
-        
-      cirlceArray.push(circleMarker); 
     }
   }
 
@@ -51,16 +42,6 @@ function createMap(data) {
   let heatLayer = L.heatLayer(heatArray, {
     radius: 25,
     blur: 20
-  });
-
-  let circleLayer = L.layerGroup(circleArray);
-
-  // tectonic plate layer
-  let geo_layer = L.geoJSON(geo_data, {
-    style: {
-      "color": "fuschia",
-      "weight": 5
-    }
   });
 
   // Step 3: BUILD the Layer Controls
@@ -73,15 +54,13 @@ function createMap(data) {
 
   let overlayLayers = {
     Markers: markers,
-    Heatmap: heatLayer,
-    Circles: circleLayer,
-    "Tectonic Plates": geo_layer
+    Heatmap: heatLayer
   }
 
   // Step 4: INIT the Map
   let myMap = L.map("map", {
-    center: [40.7128, -74.0059],
-    zoom: 11,
+    center: [0, 0],
+    zoom: 3,
     layers: [street, markers]
   });
 
@@ -92,10 +71,9 @@ function createMap(data) {
 }
 
 function doWork() {
- 
 
   // Assemble the API query URL.
-  let url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
+  let url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
 
   d3.json(url).then(function (data) {
     // console.log(data);
@@ -106,3 +84,4 @@ function doWork() {
 }
 
 doWork();
+
