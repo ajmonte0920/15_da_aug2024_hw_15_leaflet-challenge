@@ -73,7 +73,9 @@ function createMap(data) {
 
   let overlayLayers = {
     Markers: markers,
-    Heatmap: heatLayer
+    Heatmap: heatLayer,
+    Circles: circleLayer,
+    "Tectonic Plates": geo_layer
   }
 
   // Step 4: INIT the Map
