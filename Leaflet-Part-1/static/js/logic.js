@@ -1,3 +1,8 @@
+
+
+
+
+
 //helper function 
 function markerSize(mag) {
     let radius = 1;
@@ -28,24 +33,10 @@ function chooseColor(depth) {
     color = "#EA2C2C";
   }
 
+    //return color 
+    return (color);
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
