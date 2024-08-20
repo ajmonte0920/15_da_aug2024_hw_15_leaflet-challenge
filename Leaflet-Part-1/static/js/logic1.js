@@ -2,6 +2,13 @@
 // Can I render a basic base map? - Set up Leaflet correctly
 // Can we fetch the data that we need to plot?
 
+// // helper function
+// function markerSize(mag) {
+//   return Math.exp(mag) * 50;
+// }
+
+
+
 function createMap(data) {
   // STEP 1: Init the Base Layers
 
@@ -43,7 +50,7 @@ function createMap(data) {
         fillOpacity: 0.75,
         color: "purple",
         fillColor: "purple",
-        radius: location.properties.mag ** 8
+        radius: row.properties.mag ** 8
       }).bindPopup(popup);
 
       circleArray.push(circleMarker);
@@ -56,7 +63,7 @@ function createMap(data) {
     blur: 20
   });
 
-  let circleLayer = L.layerGroup(circleMarkers);
+  let circleLayer = L.layerGroup(circleArray);
 
   // Step 3: BUILD the Layer Controls
 
@@ -75,7 +82,7 @@ function createMap(data) {
   // Step 4: INIT the Map
   let myMap = L.map("map", {
     center: [0, 0],
-    zoom: 3,
+    zoom: 2,
     layers: [street, markers]
   });
 
@@ -83,12 +90,31 @@ function createMap(data) {
   // Step 5: Add the Layer Control filter + legends as needed
   L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 
+  // Step 6: Legend
+  let legend = L.control({ position: "bottomright" });
+  legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+
+    let legendInfo = "<h4>Legend</h4>"
+    legendInfo += "<i style='background: #98EE00'></i>-10-10<br/>";
+    legendInfo += "<i style='background: #D4EE00'></i>10-30<br/>";
+    legendInfo += "<i style='background: #EECC00'></i>30-50<br/>";
+    legendInfo += "<i style='background: #EE9C00'></i>50-70<br/>";
+    legendInfo += "<i style='background: #EA822C'></i>70-90<br/>";
+    legendInfo += "<i style='background: #EA2C2C'></i>90+";
+
+    div.innerHTML = legendInfo;
+    return div;
+  };
+
+  // Adding the legend to the map
+  legend.addTo(myMap);
 }
 
 function doWork() {
 
   // Assemble the API query URL.
-  let url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
+  let url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
   d3.json(url).then(function (data) {
     // console.log(data);
