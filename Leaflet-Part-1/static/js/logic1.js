@@ -17,7 +17,7 @@ function createMap(data) {
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
   let heatArray = [];
-  let circleArray =[];
+  let circleArray = [];
 
   for (let i = 0; i < data.length; i++){
     let row = data[i];
@@ -43,11 +43,10 @@ function createMap(data) {
         fillOpacity: 0.75,
         color: "purple",
         fillColor: "purple",
-        radius: locations.properties.mag ** 7
+        radius: location.properties.mag ** 8
       }).bindPopup(popup);
 
-      circleArray.push(circleMarker)
-
+      circleArray.push(circleMarker);
     }
   }
 
@@ -56,6 +55,8 @@ function createMap(data) {
     radius: 25,
     blur: 20
   });
+
+  let circleLayer = L.layerGroup(circleMarkers);
 
   // Step 3: BUILD the Layer Controls
 
@@ -67,7 +68,8 @@ function createMap(data) {
 
   let overlayLayers = {
     Markers: markers,
-    Heatmap: heatLayer
+    Heatmap: heatLayer,
+    Circles: circleLayer
   }
 
   // Step 4: INIT the Map
