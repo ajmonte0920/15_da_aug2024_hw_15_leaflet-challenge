@@ -48,8 +48,8 @@ function createMap(data) {
       // define marker (in this case a circle)
       let circleMarker = L.circle(point, {
         fillOpacity: 0.75,
-        color: "purple",
-        fillColor: "purple",
+        color: "red",
+        fillColor: "red",
         radius: row.properties.mag ** 8
       }).bindPopup(popup);
 
