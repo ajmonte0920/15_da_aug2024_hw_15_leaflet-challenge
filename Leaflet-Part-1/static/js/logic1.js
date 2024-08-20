@@ -1,12 +1,3 @@
-// GOAL 1
-// Can I render a basic base map? - Set up Leaflet correctly
-// Can we fetch the data that we need to plot?
-
-// // helper function
-// function markerSize(mag) {
-//   return Math.exp(mag) * 50;
-// }
-
 
 
 function createMap(data) {
